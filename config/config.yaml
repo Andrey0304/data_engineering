@@ -1,0 +1,114 @@
+logger:
+  level: WARNING
+  #filename: 'logging.log'
+  datefmt: '%d-%m-%Y %I:%M:%S'
+  format: |
+          %(asctime)s - %(module)s.py -> %(name)s - %(levelname)s
+          %(message)s
+          --------------------------------------
+
+# logging:
+#   version: 1
+#   disable_existing_loggers: True
+#   handlers: 
+#     fileHandler:
+#       class: logging.handlers.RotatingFileHandler
+#       formatter: myFormatter
+#       filename: loging.log
+#       mode: a
+#       maxBytes: 500000
+#       backupCount: 4
+#     consolHandler:
+#       class: logging.StreamHandler
+#       level: INFO
+#       formatter: myFormatter
+#       stream: [
+#         sys.stdout,
+#         sys.err,
+#       ]
+#   loggers:
+#     application:
+#       level: INFO
+#       handlers: fileHandler
+#     root:
+#       level: INFO
+#       handlers: consoleHandler
+#   formatters:
+#     myFormatter:
+#       datefmt: '%d-%m-%Y %I:%M:%S'
+#       format: |
+#               %(asctime)s - %(module)s - %(name)s - %(levelname)s
+#               %(message)s
+#               --------------------------------------
+                
+database_structure: database_structure.sql
+
+db_connection:
+  # dbname: base1
+  # user: postgres
+  # password: andrey0304
+  # host: 127.0.0.1
+
+instance_params:
+  # RECUIRED
+  DBInstanceIdentifier: database-1
+  DBInstanceClass: db.t2.micro
+  Engine: postgres
+  
+  EngineVersion: '12.8'
+
+  # StorageType: 'gp2' # Default: io1 if the Iops parameter is specified, otherwise gp2, Valid values: standard | gp2 | io1
+  AllocatedStorage: 20
+  # MaxAllocatedStorage: 123
+  
+  DBName: newdb
+  MasterUsername: postgres
+  MasterUserPassword: postgres
+
+  # AvailabilityZone: 'string'
+  Port: 5432 # Default: 5432, Valid values: [1150,65535]
+  PubliclyAccessible: True
+  
+  BackupRetentionPeriod: 0 # Default: 1 Valid values are: [0,35]
+  # EnablePerformanceInsights: True|False
+  # PerformanceInsightsRetentionPeriod: 123 # Valid values are: [7,731]
+  # MonitoringInterval: 123 # Default 0, Valid Values: 0, 1, 5, 10, 15, 30, 60
+  
+  AutoMinorVersionUpgrade: False
+  # StorageEncrypted: True|False # Default: False
+  # CopyTagsToSnapshot: True|False
+  # EnableIAMDatabaseAuthentication: True|False # Default: False
+  # PreferredMaintenanceWindow: 'string'
+  # DeletionProtection: True|False # Default: False, If True -database can't be deleted.
+  
+  # DBSecurityGroups: ['string']
+  # DBParameterGroupName: 'default.postgres12'
+  # DBSubnetGroupName: 'default-vpc-8edeb1e4'
+  # VpcSecurityGroupIds: ['string']
+  # PreferredBackupWindow: 'string' # The default is a 30-minute window selected at random from an 8-hour block of time
+  # MultiAZ: False
+  # LicenseModel: 'postgresql-license'
+  # Iops: 123
+  # OptionGroupName: 'default:postgres-12'
+  # CharacterSetName: 'string'
+  # NcharCharacterSetName: 'string'
+  # Tags: [Key: 'string', Value: 'string']
+  # DBClusterIdentifier: 'string'
+  # TdeCredentialArn: 'string'
+  # TdeCredentialPassword: 'string'
+  # KmsKeyId: 'string'
+  # Domain: 'string'
+  # MonitoringRoleArn: 'string'
+  # DomainIAMRoleName: 'string'
+  # PromotionTier: 123
+  # Timezone: 'string'
+  # PerformanceInsightsKMSKeyId: 'string'
+  # EnableCloudwatchLogsExports: [
+  #     'string',
+  # ]
+  # ProcessorFeatures: [
+  #   Name: 'string',
+  #   Value: 'string'
+  #]
+  # EnableCustomerOwnedIp: True|False
+  # CustomIamInstanceProfile: 'string'
