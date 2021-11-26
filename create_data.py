@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import string
 import random
-from main import log
+from init_logger import log
 
 
 @log('WARNING')

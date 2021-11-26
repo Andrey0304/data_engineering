@@ -42,7 +42,9 @@ logger:
 #               --------------------------------------
                 
 database_structure: database_structure.sql
-
+required_packages_dir: required_packages
+required_packages_file: requirements.txt
+enviroment_name: myvenv
 db_connection:
   # dbname: base1
   # user: postgres

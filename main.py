@@ -1,37 +1,16 @@
 import create_data
+from init_logger import log
 import pandas as pd
 from io import StringIO
 import psycopg2
 import logging
-import logging.config
 import time
 import boto3
 import yaml
-import os, sys
-from functools import wraps
+import os
 import warnings
 
 warnings.filterwarnings("ignore")
-
-
-def log(level='WARNING'):
-    def log_decorator(function):
-        @wraps(function)
-        def wrapper(*args, **kwargs):
-            try:
-                return function(*args, **kwargs)
-            except Exception as ex:
-                logger = logging.getLogger(f'{function.__name__}')
-                loggers = {
-                           'WARNING': logger.warning,
-                           'ERROR': logger.error,
-                           'CRITICAL': logger.critical
-                           }
-                loggers[level](ex)
-            if level == 'CRITICAL':
-                sys.exit()
-        return wrapper
-    return log_decorator
 
 
 @log('ERROR')
@@ -137,7 +116,7 @@ def copy_data_to_database(cursor, data: pd.DataFrame, table_name: str):
 
 
 def main():
-    os.chdir(os.path.dirname(__file__))
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     config_path = os.path.join('config', 'config.yaml')
     config = yaml.safe_load(open(config_path))
 
