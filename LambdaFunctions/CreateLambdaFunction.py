@@ -1,6 +1,5 @@
 import boto3
 import os
-import pprint
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.environ['AWS_CONFIG_FILE'] = os.path.join('config', 'aws_config')
