@@ -2,3 +2,5 @@
 aws*
 .idea/
 __pycache__/
+*zip
+UploadPythonPkgsToS3/PythonReqPkgs/
