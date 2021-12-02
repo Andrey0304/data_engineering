@@ -6,48 +6,35 @@ logger:
           %(asctime)s - %(module)s.py -> %(name)s - %(levelname)s
           %(message)s
           --------------------------------------
-
-# logging:
-#   version: 1
-#   disable_existing_loggers: True
-#   handlers: 
-#     fileHandler:
-#       class: logging.handlers.RotatingFileHandler
-#       formatter: myFormatter
-#       filename: loging.log
-#       mode: a
-#       maxBytes: 500000
-#       backupCount: 4
-#     consolHandler:
-#       class: logging.StreamHandler
-#       level: INFO
-#       formatter: myFormatter
-#       stream: [
-#         sys.stdout,
-#         sys.err,
-#       ]
-#   loggers:
-#     application:
-#       level: INFO
-#       handlers: fileHandler
-#     root:
-#       level: INFO
-#       handlers: consoleHandler
-#   formatters:
-#     myFormatter:
-#       datefmt: '%d-%m-%Y %I:%M:%S'
-#       format: |
-#               %(asctime)s - %(module)s - %(name)s - %(levelname)s
-#               %(message)s
-#               --------------------------------------
                 
 database_structure: CreatesRDSInstance/database_structure.sql
-required_packages_dir: UploadPythonPkgsToS3/PythonReqPkgs/python
-required_packages_file: UploadPythonPkgsToS3/requirements.txt
+required_packages_dir: createLambdaLayer/PythonReqPkgs/python
+required_packages_file: createLambdaLayer/requirements.txt
 
-BucketName: python-pkgs
-Pkgs_Zip_file: UploadPythonPkgsToS3/PythonReqPkgs/python.zip
+BucketName: python-pkgs-for-lamda-layer
+Pkgs_Zip_file: createLambdaLayer/PythonReqPkgs/python.zip
 region: eu-central-1
+
+
+IAMRole:
+  RoleName: VPC_RDS_FullAccess
+  PolicyArn: [
+    arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole,
+    arn:aws:iam::aws:policy/AmazonRDSFullAccess,
+  ]
+
+lambda:
+  FunctionName: 'TransactionGenerator'
+  FunctionCode: createEventBridgeRule/lambdaFunctionCode.zip
+  LayerName: PythonPkgs
+  Handler: lambda_function.lambda_hendler
+
+event:
+  Name: TransactionGenerator
+  ScheduleExpression: cron(5 * * * ? *)
+  State: ENABLED
+  Description: Generates transactions every 5 minutes
+
 
 # db_connection:
 #   dbname: newdb
@@ -118,3 +105,38 @@ instance_params:
   #]
   # EnableCustomerOwnedIp: True|False
   # CustomIamInstanceProfile: 'string'
+
+# logging:
+#   version: 1
+#   disable_existing_loggers: True
+#   handlers: 
+#     fileHandler:
+#       class: logging.handlers.RotatingFileHandler
+#       formatter: myFormatter
+#       filename: loging.log
+#       mode: a
+#       maxBytes: 500000
+#       backupCount: 4
+#     consolHandler:
+#       class: logging.StreamHandler
+#       level: INFO
+#       formatter: myFormatter
+#       stream: [
+#         sys.stdout,
+#         sys.err,
+#       ]
+#   loggers:
+#     application:
+#       level: INFO
+#       handlers: fileHandler
+#     root:
+#       level: INFO
+#       handlers: consoleHandler
+#   formatters:
+#     myFormatter:
+#       datefmt: '%d-%m-%Y %I:%M:%S'
+#       format: |
+#               %(asctime)s - %(module)s - %(name)s - %(levelname)s
+#               %(message)s
+#               --------------------------------------
+ 
