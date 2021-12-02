@@ -7,7 +7,7 @@ logger:
           %(message)s
           --------------------------------------
                 
-database_structure: CreatesRDSInstance/database_structure.sql
+database_structure: createRDSInstance/database_structure.sql
 required_packages_dir: createLambdaLayer/PythonReqPkgs/python
 required_packages_file: createLambdaLayer/requirements.txt
 
