@@ -56,7 +56,7 @@ instance_params:
   
   DBName: newdb
   MasterUsername: postgres
-  MasterUserPassword: posgres
+  MasterUserPassword: postgres
 
   # AvailabilityZone: 'string'
   Port: 5432 # Default: 5432, Valid values: [1150,65535]

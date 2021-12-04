@@ -9,7 +9,7 @@ def log(level='WARNING'):
         def wrapper(*args, **kwargs):
             try:
                 return function(*args, **kwargs)
-            except (Exception, subprocess.SubprocessError) as ex:
+            except Exception as ex:
                 logger = logging.getLogger(f'{function.__name__}')
                 loggers = {
                            'WARNING': logger.warning,

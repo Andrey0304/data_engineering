@@ -62,7 +62,7 @@ CREATE TABLE financial_instrument (
     description VARCHAR(50) NOT NULL,
     multiplier INTEGER,
     type VARCHAR(10) NOT NULL,
-    -- UNIQUE (bank_id, security_id),
+    --UNIQUE (bank_id, security_id),
     PRIMARY KEY (bank_id, conn_id),
     FOREIGN KEY (bank_id) REFERENCES banks (id)
 );
