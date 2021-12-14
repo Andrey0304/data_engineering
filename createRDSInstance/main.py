@@ -139,10 +139,17 @@ def main():
         print('Database structure was successfuly created.')
 
         users = create_data.create_users(200)
-        users_id = users['id'].values.tolist()
+        copy_data_to_database(cursor=cursor, data=users, table_name='users')
+        
+        sql = 'SELECT total_id, registration FROM users;'
+        users = pd.io.sql.read_sql_query(sql,  conn)
+        users_id = users['total_id'].values.tolist()
             
         banks = create_data.create_banks()
-        banks_id = banks['id'].values.tolist()
+        copy_data_to_database(cursor=cursor, data=banks, table_name='banks')
+        # banks_id = banks['id'].values.tolist()
+        cursor.execute('SELECT total_id FROM banks;')
+        banks_id = tuple(map(lambda x: x[0], cursor.fetchall()))
 
         codes = create_data.create_codes(banks_id)
         currency_exchange = create_data.create_currency_exchange()
@@ -164,8 +171,6 @@ def main():
         corporate_actions = create_data.create_corporate_actions(banks_id)
 
         table_names = (
-            'users',
-            'banks',
             'codes',
             'currency_exchange',
             'financial_instrument',

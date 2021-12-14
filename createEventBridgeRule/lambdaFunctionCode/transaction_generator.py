@@ -28,7 +28,7 @@ def generator(config: dict, N: int):
 
         sql = 'SELECT id, registration FROM users;'
         users = pd.io.sql.read_sql_query(sql,  conn)
-        users_id = users['id'].values.tolist()
+        users_id = users['total_id'].values.tolist()
         
         cursor.execute('SELECT code FROM codes;')
         codes = tuple(map(lambda x: x[0], cursor.fetchall()))

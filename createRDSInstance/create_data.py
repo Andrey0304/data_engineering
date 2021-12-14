@@ -8,12 +8,12 @@ from init_logger import log
 @log('WARNING')
 def create_banks()->pd.DataFrame:
     banks = pd.DataFrame(columns=[
-        'id',
+        # 'id',
         'name',
         'contact',
         'cooperation',
         ])
-    banks.id = list(range(1,7))
+    # banks.id = list(range(1,7))
     banks.name = (
         'Converse Bank',
         'Ameria Bank',
@@ -55,7 +55,7 @@ def create_users(N: int)->pd.DataFrame:
                 'Stepanyan', 'Avagyan', 'Arushanyan')
 
     users['name'] = [random.choice(boy_names + girl_names) for _ in range(N)]
-    users['id'] = list(range(1, N+1))
+    # users['id'] = list(range(1, N+1))
     users['surname'] = [random.choice(surnames) for _ in range(N)]
 
     users['sex'] = ['M' if name in boy_names else 'F' for name in users['name'].values]
@@ -155,10 +155,10 @@ def create_currency_exchange()->pd.DataFrame:
         'MXN': 0.050
     }
     currency_exchange = pd.DataFrame(
-        columns = ['currency', 'coeff', 'datetime'])
+        columns = ['currency', 'coeff', 'add_datetime'])
     currency_exchange.currency = base_currency.keys()
     currency_exchange.coeff = base_currency.values()
-    currency_exchange.datetime = [
+    currency_exchange.add_datetime = [
         pd.to_datetime('2021-11-10 12:33:33') + pd.to_timedelta(random.randint(1,100), unit='m')
         for _ in range(10)
         ]
@@ -336,7 +336,7 @@ def create_trades(fin_instrument: pd.DataFrame,
     trades.currency = [random.choice(['USD', 'AUD', 'GBP', 'EUR', 'NZD', 'CAD', 'CHF'])
                        for _ in range(N)]
     trades.datetime = trades.user_id.apply(
-        lambda id: users[users.id == id].registration.item() + pd.to_timedelta(random.randint(1, 5000), unit='h')
+        lambda id: users[users.total_id == id].registration.item() + pd.to_timedelta(random.randint(1, 5000), unit='h')
         )
     trades.quantity = random.sample(range(1000, 500_000, 1000), N)
     trades.t_price = random.sample(np.arange(1.5, 200, 0.5).tolist(), N)

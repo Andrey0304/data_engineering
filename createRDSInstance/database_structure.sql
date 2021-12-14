@@ -14,17 +14,22 @@ DROP TABLE IF EXISTS
 CASCADE;
 
 CREATE TABLE banks (
-    id INTEGER, -- GENERATED ALWAYS AS IDENTITY, or see -SERIAL
+    total_id SERIAL,
+    id SERIAL,
     name VARCHAR(30) NOT NULL,
     contact VARCHAR(15) NOT NULL,
     cooperation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modify_date TIMESTAMP DEFAULT '2100-01-01 00:00:00',
+    UNIQUE (id, create_date),
     UNIQUE (contact),
     UNIQUE (name),
-    PRIMARY KEY (id)
+    PRIMARY KEY (total_id)
 );
 
 CREATE TABLE users (
-    id INTEGER, -- GENERATED ALWAYS AS IDENTITY,
+    total_id SERIAL,
+    id SERIAL,
     name VARCHAR NOT NULL,
     surname VARCHAR NOT NULL,
     sex CHAR(1) NOT NULL ,
@@ -33,9 +38,12 @@ CREATE TABLE users (
     date_of_birth DATE NOT NULL ,
     phone VARCHAR,
     registration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modify_date TIMESTAMP DEFAULT '2100-01-01 00:00:00',
+    UNIQUE (id, create_date),
     UNIQUE (phone),
     UNIQUE (passport_no),
-    PRIMARY KEY (id)
+    PRIMARY KEY (total_id)
 );
 
 CREATE TABLE codes (
@@ -43,13 +51,13 @@ CREATE TABLE codes (
     code varchar(5) NOT NULL,
     meaning VARCHAR(200) NOT NULL,
     UNIQUE (bank_id, code),
-    FOREIGN KEY (bank_id) REFERENCES banks (id)
+    FOREIGN KEY (bank_id) REFERENCES banks (total_id)
 );
 
 CREATE TABLE currency_exchange (
     currency VARCHAR(4),
     coeff DOUBLE PRECISION NOT NULL,
-    datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    add_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (currency)
 );
 
@@ -64,7 +72,7 @@ CREATE TABLE financial_instrument (
     type VARCHAR(10) NOT NULL,
     --UNIQUE (bank_id, security_id),
     PRIMARY KEY (bank_id, conn_id),
-    FOREIGN KEY (bank_id) REFERENCES banks (id)
+    FOREIGN KEY (bank_id) REFERENCES banks (total_id)
 );
 
 CREATE TABLE dividends (
@@ -75,19 +83,19 @@ CREATE TABLE dividends (
     date DATE NOT NULL,
     description VARCHAR NOT NULL,
     amount DOUBLE PRECISION NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (user_id) REFERENCES users (total_id),
     FOREIGN KEY (currency) REFERENCES currency_exchange (currency)
-    -- FOREIGN KEY (bank_id, sec_id) REFERENCES financial_instrument (bank_id, security_id)
+    --FOREIGN KEY (bank_id, sec_id) REFERENCES financial_instrument (bank_id, security_id)
  );
 
 CREATE TABLE interests AS TABLE dividends WITH NO DATA;
-ALTER TABLE interests ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE interests ADD FOREIGN KEY (user_id) REFERENCES users (total_id);
 ALTER TABLE interests ADD FOREIGN KEY (currency) REFERENCES currency_exchange (currency);
 --ALTER TABLE interests ADD FOREIGN KEY (bank_id, sec_id) REFERENCES financial_instrument (bank_id, security_id);
 
 CREATE TABLE withholding_tax (
     LIKE dividends INCLUDING ALL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (user_id) REFERENCES users (total_id),
     FOREIGN KEY (currency) REFERENCES currency_exchange (currency)
     --FOREIGN KEY (bank_id, sec_id) REFERENCES financial_instrument (bank_id, security_id)
 --     INCLUDING DEFAULTS
@@ -105,7 +113,7 @@ CREATE TABLE change_in_dividend_accruals (
     ex_date DATE NOT NULL,
     pay_date DATE NOT NULL,
     quantity VARCHAR NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (total_id)
     --FOREIGN KEY (bank_id, sec_id) REFERENCES financial_instrument (bank_id, security_id)
 );
 
@@ -113,7 +121,7 @@ CREATE TABLE corporate_actions (
     bank_id INTEGER NOT NULL,
     description VARCHAR NOT NULL,
     report_date DATE NOT NULL,
-    FOREIGN KEY (bank_id) REFERENCES banks (id)
+    FOREIGN KEY (bank_id) REFERENCES banks (total_id)
 );
 
 CREATE TABLE trades (
@@ -127,14 +135,14 @@ CREATE TABLE trades (
     t_price DOUBLE PRECISION NOT NULL,
     comm_fee DOUBLE PRECISION NOT NULL,
     code VARCHAR(5),
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (user_id) REFERENCES users (total_id),
     FOREIGN KEY (currency) REFERENCES currency_exchange (currency),
-    FOREIGN KEY (bank_id) REFERENCES banks (id),
+    FOREIGN KEY (bank_id) REFERENCES banks (total_id),
     FOREIGN KEY (bank_id, conn_id) REFERENCES financial_instrument (bank_id, conn_id)
 );
 
 CREATE TABLE open_positions AS TABLE trades WITH NO DATA;
 ALTER TABLE open_positions DROP COLUMN code;
 ALTER TABLE open_positions ADD FOREIGN KEY (bank_id, conn_id) REFERENCES financial_instrument (bank_id, conn_id);
-ALTER TABLE open_positions ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE open_positions ADD FOREIGN KEY (user_id) REFERENCES users (total_id);
 ALTER TABLE open_positions ADD FOREIGN KEY (currency) REFERENCES currency_exchange (currency);
