@@ -71,6 +71,7 @@ def create_lambda_functon(
         Layers=[
             lambdaLayerArn,
             ],
+        Timeout=900 #seconds
 )
 
 
@@ -112,9 +113,7 @@ def main():
     lambdaFunctionName = lambda_config ['FunctionName']
     lambdaHandler = lambda_config ['Handler']
     
-    logging.basicConfig(**config['logger'])
-    
-    create_role_for_lambda(RoleName, PolicyArn_list)
+    # create_role_for_lambda(RoleName, PolicyArn_list)
     create_lambda_functon(
         lambdaFunctionName,
         lambdaHandler,
@@ -122,7 +121,7 @@ def main():
         RoleName,
         lambdaFunctionCode,
         )
-    create_EventBridge_role(lambdaFunctionName, config['event'])
+    # create_EventBridge_role(lambdaFunctionName, config['event'])
 
 
 if __name__ == '__main__':

@@ -79,7 +79,7 @@ def create_lambda_layer(
     lambda_client = boto3.client('lambda')
     response = lambda_client.publish_layer_version(
             LayerName=LayerName,
-            Description='yaml, pandas, numpy, psycopg2, psycopg2-binary',
+            Description='yaml, pandas, numpy, psycopg2, psycopg2-binary, s3fs, pyarrow',
             Content={
                 'S3Bucket': BucketName,
                 'S3Key': ObjectName,
@@ -94,8 +94,14 @@ def create_lambda_layer(
 def main():
     os.chdir(dirname(dirname(abspath(__file__))))
 
-    os.environ['AWS_CONFIG_FILE'] = os.path.join('config', 'aws_config')
-    os.environ['AWS_SHARED_CREDENTIALS_FILE'] = os.path.join('config','aws_credentials')
+    os.environ['AWS_CONFIG_FILE'] = os.path.join(
+        'config',
+        'aws_config',
+         )
+    os.environ['AWS_SHARED_CREDENTIALS_FILE'] = os.path.join(
+         'config',
+         'aws_credentials',
+         )
 
     config_path = os.path.join('config', 'config.yaml')
     config = yaml.safe_load(open(config_path))
@@ -105,16 +111,16 @@ def main():
     BucketName = config['BucketName']
     Pkgs_Zip_file = config['Pkgs_Zip_file']
     Region = config['region']
-    LayerName = config['lambdaLayerName']
+    LayerName = config['lambda']['LayerName']
 
     ObjectName = basename(Pkgs_Zip_file)
     
     logging.basicConfig(**config['logger'])
 
-    install_requirements(PathToDir, PathToReqs)
-    upload_to_s3(BucketName, ObjectName, Pkgs_Zip_file, Region)
+    # install_requirements(PathToDir, PathToReqs)
+    upload_object_to_s3(BucketName, ObjectName, Pkgs_Zip_file, Region)
     create_lambda_layer(LayerName, BucketName, ObjectName)
 
 
 if __name__ == '__main__':
-    maun()
+    main()

@@ -8,7 +8,6 @@ from init_logger import log
 @log('WARNING')
 def create_banks()->pd.DataFrame:
     banks = pd.DataFrame(columns=[
-        # 'id',
         'name',
         'contact',
         'cooperation',
@@ -155,10 +154,10 @@ def create_currency_exchange()->pd.DataFrame:
         'MXN': 0.050
     }
     currency_exchange = pd.DataFrame(
-        columns = ['currency', 'coeff', 'add_datetime'])
+        columns = ['currency', 'coeff', 'update_time'])
     currency_exchange.currency = base_currency.keys()
     currency_exchange.coeff = base_currency.values()
-    currency_exchange.add_datetime = [
+    currency_exchange.update_time = [
         pd.to_datetime('2021-11-10 12:33:33') + pd.to_timedelta(random.randint(1,100), unit='m')
         for _ in range(10)
         ]
@@ -235,7 +234,7 @@ def create_dividends(user_id_list: list,
         'bank_id',
         'sec_id',
         'currency',
-        'date',
+        'pay_date',
         'description',
         'amount'
         ])
@@ -252,7 +251,7 @@ def create_dividends(user_id_list: list,
                              for _ in range(N)]
     dividends.currency = [random.choice(['USD', 'AUD', 'GBP', 'EUR', 'NZD', 'CAD', 'CHF'])
                           for _ in range(N)]
-    dividends.date = [(pd.to_datetime('2021-01-01') + pd.to_timedelta(random.randint(1,300), unit='d')).date()
+    dividends.pay_date = [(pd.to_datetime('2021-01-01') + pd.to_timedelta(random.randint(1,300), unit='d')).date()
                       for _ in range(N)]
     dividends.amount = random.sample(range(-100, 200), N)
 
@@ -299,7 +298,6 @@ def create_change_in_dividend_accruals(datafrm_for_copying:pd.DataFrame)->pd.Dat
     
     change_in_dividend_accruals = datafrm_for_copying
     change_in_dividend_accruals.drop(columns=['amount', 'currency', 'description'], inplace=True)
-    change_in_dividend_accruals.rename(columns={'date': 'pay_date'}, inplace=True)
     change_in_dividend_accruals['quantity'] = random.sample(range(100, 10000, 100), datafrm_for_copying.shape[0])
     change_in_dividend_accruals['ex_date'] = change_in_dividend_accruals.pay_date.apply(
         lambda date: date - pd.to_timedelta(random.randint(1,20), unit='d')
@@ -320,7 +318,7 @@ def create_trades(fin_instrument: pd.DataFrame,
                                     'conn_id',
                                     'currency',
                                     'symbol',
-                                    'datetime',
+                                    'pay_date',
                                     'quantity',
                                     't_price',
                                     'comm_fee',
@@ -335,8 +333,8 @@ def create_trades(fin_instrument: pd.DataFrame,
     trades.user_id = [random.choice(user_id_list) for _ in range(N)]
     trades.currency = [random.choice(['USD', 'AUD', 'GBP', 'EUR', 'NZD', 'CAD', 'CHF'])
                        for _ in range(N)]
-    trades.datetime = trades.user_id.apply(
-        lambda id: users[users.total_id == id].registration.item() + pd.to_timedelta(random.randint(1, 5000), unit='h')
+    trades.pay_date = trades.user_id.apply(
+        lambda id: users[users.id == id].registration.item() + pd.to_timedelta(random.randint(1, 5000), unit='h')
         )
     trades.quantity = random.sample(range(1000, 500_000, 1000), N)
     trades.t_price = random.sample(np.arange(1.5, 200, 0.5).tolist(), N)
@@ -362,10 +360,10 @@ def create_corporate_actions(banks_id: list)->pd.DataFrame:
 
     corporate_actions = pd.DataFrame(columns=['bank_id',
                                               'description',
-                                              'report_date'])
+                                              'pay_date'])
     
     corporate_actions.bank_id = [random.choice(banks_id) for _ in range(4)]
-    corporate_actions.report_date = [
+    corporate_actions.pay_date = [
         (pd.to_datetime('2021-01-01') + pd.to_timedelta(random.randint(1,300), unit='d')).date()
         for _ in range(4)
         ]

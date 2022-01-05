@@ -1,4 +1,6 @@
 yaml
+s3fs
+pyarrow
 pandas
 psycopg2
 psycopg2-binary

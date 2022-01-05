@@ -25,9 +25,10 @@ IAMRole:
 
 lambda:
   FunctionName: 'TransactionGenerator'
-  FunctionCode: createEventBridgeRule/lambdaFunctionCode.zip
+  FunctionCode: createEventBridgeRule/lambdaFunctions/TransactionGenerator.zip
   LayerName: PythonPkgs
   Handler: lambda_function.lambda_hendler
+
 
 event:
   Name: TransactionGenerator
@@ -36,11 +37,17 @@ event:
   Description: Generates transactions every 5 minutes
 
 
-# db_connection:
-#   dbname: newdb
-#   user: postgres
-#   password: andrey0304
-#   host: 127.0.0.1
+db_connection:
+  dbname: newdb
+  user: postgres
+  password: andrey0304
+  host: 127.0.0.1
+
+rds:
+  host: database-1.cyiiggb1luvo.eu-central-1.rds.amazonaws.com
+  dbname: newdb
+  user: postgres
+  password: postgres
 
 instance_params:
   # RECUIRED
