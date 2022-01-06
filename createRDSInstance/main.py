@@ -135,9 +135,13 @@ def main():
         conn.autocommit = True
         
         # Create database structure
-        cursor.execute(open(config['database_structure'], "r").read())
+        cursor.execute(open(config['rds_db_structure'], "r").read())
         print('Database structure was successfuly created.')
 
+        # Execute triggers
+        cursor.execute(open(config['rds_db_triggers'], "r").read())
+        print('Triggers was successfuly execute.')
+        
         users = create_data.create_users(200)
         copy_data_to_database(cursor=cursor, data=users, table_name='users')
         

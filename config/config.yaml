@@ -7,7 +7,11 @@ logger:
           %(message)s
           --------------------------------------
                 
-database_structure: createRDSInstance/database_structure.sql
+rds_db_structure: createRDSInstance/database_structure.sql
+rds_db_triggers: createRDSInstance/triggers.sql
+
+redshift_db_structure: createRedshiftCluster/redshift_db_structure.sql
+
 required_packages_dir: createLambdaLayer/PythonReqPkgs/python
 required_packages_file: createLambdaLayer/requirements.txt
 
@@ -48,6 +52,14 @@ rds:
   dbname: newdb
   user: postgres
   password: postgres
+
+redshift:
+  host: redshift-cluster-1.cpo5hazuoah4.eu-central-1.redshift.amazonaws.com
+  port: 5439
+  dbname: dev
+  user: redshift
+  password: Redshift2022
+
 
 instance_params:
   # RECUIRED

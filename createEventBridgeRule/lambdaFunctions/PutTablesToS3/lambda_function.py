@@ -16,7 +16,7 @@ def put_object_to_S3(
 	for table in tables:
 		sql = f"""
 				SELECT * FROM {table}
-				WHERE {column_for_check} >= '{datetime.now(pytz.timezone('Asia/Tbilisi')) - timedelta(hours=100000)}';
+				WHERE {column_for_check} >= '{datetime.now(pytz.timezone('Asia/Tbilisi')) - timedelta(hours=24)}';
 			   """
 		frame = pd.io.sql.read_sql_query(sql,  conn)
 		frame.to_parquet(
