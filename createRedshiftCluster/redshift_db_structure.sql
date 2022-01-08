@@ -1,13 +1,11 @@
-DROP TABLE IF EXISTS
-    currency_exchange,
-    financial_instrument,
-    users,
-    banks,
-    codes,
-CASCADE;
+DROP TABLE IF EXISTS currency_exchange CASCADE;
+DROP TABLE IF EXISTS financial_instrument CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS banks CASCADE;
+DROP TABLE IF EXISTS codes CASCADE;
 
 CREATE TABLE IF NOT EXISTS banks (
-    id INTEGER,
+    id BIGINT,
     name VARCHAR(30) NOT NULL,
     contact VARCHAR(15) NOT NULL,
     cooperation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -34,8 +32,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS codes (
-    bank_id INTEGER NOT NULL,
-    code varchar(5) NOT NULL,
+    bank_id BIGINT NOT NULL,
+    code VARCHAR(5) NOT NULL,
     meaning VARCHAR(200) NOT NULL,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (bank_id, code),
@@ -43,20 +41,20 @@ CREATE TABLE IF NOT EXISTS codes (
 );
 
 CREATE TABLE IF NOT EXISTS currency_exchange (
-    currency VARCHAR(4),
+    currency VARCHAR,
     coeff DOUBLE PRECISION NOT NULL,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (currency)
 );
 
 CREATE TABLE IF NOT EXISTS financial_instrument (
-    bank_id INTEGER NOT NULL,
-    conn_id INTEGER NOT NULL,
+    bank_id BIGINT NOT NULL,
+    conn_id BIGINT NOT NULL,
     security_id VARCHAR(20), -- only have Bonds and Stocks
     asset_category VARCHAR(30) NOT NULL,
     symbol VARCHAR(30) NOT NULL UNIQUE,
     description VARCHAR(50) NOT NULL,
-    multiplier INTEGER,
+    multiplier BIGINT,
     type VARCHAR(10) NOT NULL,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     --UNIQUE (bank_id, security_id),
@@ -66,8 +64,8 @@ CREATE TABLE IF NOT EXISTS financial_instrument (
 
 
 CREATE TABLE IF NOT EXISTS change_in_dividend_accruals (
-    user_id INTEGER NOT NULL,
-    bank_id INTEGER NOT NULL,
+    user_id BIGINT NOT NULL,
+    bank_id BIGINT NOT NULL,
     sec_id VARCHAR(20) NOT NULL,
     ex_date DATE NOT NULL,
     pay_date DATE NOT NULL,

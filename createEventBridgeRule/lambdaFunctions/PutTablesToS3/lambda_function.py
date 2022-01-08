@@ -4,7 +4,11 @@ import pytz
 import pandas as pd
 from datetime import datetime, timedelta
 
-ObjectName = str(datetime.now(pytz.timezone('Asia/Tbilisi'))).replace(' ', '_')
+# ObjectName = str(datetime.now(pytz.timezone('Asia/Tbilisi'))).replace(' ', '_')
+datetime_str = f'{datetime.now().date()} 23:00:00'
+datetime_obj = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+
+ObjectName = datetime_str.replace(' ', '_')
 BucketName = 'data-lake-for-me'
 
 def put_object_to_S3(
@@ -16,7 +20,7 @@ def put_object_to_S3(
 	for table in tables:
 		sql = f"""
 				SELECT * FROM {table}
-				WHERE {column_for_check} >= '{datetime.now(pytz.timezone('Asia/Tbilisi')) - timedelta(hours=24)}';
+				WHERE {column_for_check} >= '{datetime_obj - timedelta(hours=24)}';
 			   """
 		frame = pd.io.sql.read_sql_query(sql,  conn)
 		frame.to_parquet(
@@ -54,4 +58,6 @@ def lambda_handler(event, context):
     put_object_to_S3(conn, s3_client, transaction_tables, 'pay_date')
     put_object_to_S3(conn, s3_client, static_tables, 'update_time')
     
+    # print(pd.read_parquet('s3://data-lake-for-me/currency_exchange/2022-01-08_23:00:00'))
+    print(datetime_obj - timedelta(hours=24))
     return 0

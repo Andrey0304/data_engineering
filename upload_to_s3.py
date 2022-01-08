@@ -39,28 +39,7 @@ static_tables =  (
             'financial_instrument',
             )
 
-def put_object_to_S3(
-	conn,
-	client,
-	tables: tuple,
-	column_for_check: str
-):
-	for table in tables:
-		sql = f"""
-				SELECT * FROM {table}
-				WHERE {column_for_check} >= '{datetime.now() - timedelta(hours=100000)}';
-			   """
-		frame = pd.io.sql.read_sql_query(sql,  conn)
-		frame.to_parquet(
-			f's3://{BucketName}/{table}/{DATETIME}',
-			compression='brotli',
-			engine='pyarrow',
-			index=False
-			)
-	
-put_object_to_S3(conn, s3_client, transaction_tables, 'pay_date')
-put_object_to_S3(conn, s3_client, static_tables, 'update_time')
+buffer = io.StringIO()
+s3_client.download_fileobj(BucketName, 's3://data-lake-for-me/banks/2022-01-08_23:00:00', buffer)
+print(pd.read_parquet(buffer))
 
-# buffer = io.BytesIO()
-# s3_client.download_fileobj(BucketName, f'trades/{DATETIME}', buffer)
-# print(pd.read_parquet(buffer))

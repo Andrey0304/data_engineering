@@ -154,13 +154,9 @@ def create_currency_exchange()->pd.DataFrame:
         'MXN': 0.050
     }
     currency_exchange = pd.DataFrame(
-        columns = ['currency', 'coeff', 'update_time'])
+        columns = ['currency', 'coeff'])
     currency_exchange.currency = base_currency.keys()
     currency_exchange.coeff = base_currency.values()
-    currency_exchange.update_time = [
-        pd.to_datetime('2021-11-10 12:33:33') + pd.to_timedelta(random.randint(1,100), unit='m')
-        for _ in range(10)
-        ]
     return currency_exchange
 
 

@@ -16,11 +16,38 @@ os.environ['AWS_SHARED_CREDENTIALS_FILE'] = os.path.join('config','aws_credentia
 config_path = os.path.join('config', 'config.yaml')
 config = yaml.safe_load(open(config_path))
 
-ObjectName = str(datetime.now(pytz.timezone('Asia/Tbilisi'))).replace(' ', '_')
+ObjectName = f'{datetime.now().date()}_23:00:00'
 BucketName = 'data-lake-for-me'
 
+conn = psycopg2.connect(**config['redshift'])
+with conn.cursor() as cursor:
+    conn.autocommit = True
+       
+    # Create database structure
+    cursor.execute(open(config['redshift_db_structure'], "r").read())
+    print('Redshift Database structure was successfuly created.')
 
-# def put_object_to_Readshift(
+    static_tables =  (
+    			'users',
+    			'banks',
+    			'codes',
+                'currency_exchange',
+                'financial_instrument',
+                )
+
+    for table in static_tables:
+    	cursor.execute(
+			f"""
+			COPY {table}
+			FROM 's3://{BucketName}/{table}/{ObjectName}'
+			IAM_ROLE 'arn:aws:iam::706509704930:role/service-role/AmazonRedshift-CommandsAccessRole-20220106T170424'
+			FORMAT AS PARQUET;
+			"""
+			)
+    	print(f'{table} successfuly upload to Data WareHouse')
+
+
+   # def put_object_to_Readshift(
 # 	conn,
 # 	client,
 # 	tables: tuple,
@@ -39,30 +66,3 @@ BucketName = 'data-lake-for-me'
 	    
 # 	    buffer.close()
 
-
-conn = psycopg2.connect(**config['redshift'])
-with conn.cursor() as cursor:
-    conn.autocommit = True
-       
-    # Create database structure
-    cursor.execute(open(config['redshift_db_structure'], "r").read())
-    print('Redshift Database structure was successfuly created.')
-
-    # static_tables =  (
-    # 			'users',
-    # 			'banks',
-    # 			'codes',
-    #             'currency_exchange',
-    #             'financial_instrument',
-    #             )
-    # put_object_to_Readshift()
-
-    # for table in static_tables:
-   #  cursor.execute(
-			# f"""
-			# copy users
-			# from 's3://data-lake-for-me/users/2022-01-06_16:38:55.215100+04:00'
-			# iam_role 'arn:aws:iam::706509704930:role/service-role/AmazonRedshift-CommandsAccessRole-20220106T170424'
-			# parquet;
-			# """
-			# )

@@ -42,7 +42,7 @@ CREATE TABLE users (
 
 CREATE TABLE codes (
     bank_id INTEGER NOT NULL,
-    code varchar(5) NOT NULL,
+    code VARCHAR(5) NOT NULL,
     meaning VARCHAR(200) NOT NULL,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (bank_id, code),
@@ -50,7 +50,7 @@ CREATE TABLE codes (
 );
 
 CREATE TABLE currency_exchange (
-    currency VARCHAR(4),
+    currency VARCHAR, --(4)
     coeff DOUBLE PRECISION NOT NULL,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (currency)
