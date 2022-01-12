@@ -170,7 +170,7 @@ def main():
                                             users_id,
                                             users,
                                             codes.code.values,
-                                            200)
+                                            800)
         open_positions = create_data.create_open_positions(trades.copy())
         corporate_actions = create_data.create_corporate_actions(banks_id)
 

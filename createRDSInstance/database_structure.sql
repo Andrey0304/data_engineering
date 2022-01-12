@@ -127,7 +127,7 @@ CREATE TABLE trades (
     symbol VARCHAR(30) NOT NULL, -- for the case of Forex
     currency VARCHAR(3) NOT NULL,
     pay_date TIMESTAMP NOT NULL,
-    quantity VARCHAR(12) NOT NULL,
+    quantity INTEGER NOT NULL,
     t_price DOUBLE PRECISION NOT NULL,
     comm_fee DOUBLE PRECISION NOT NULL,
     code VARCHAR(5),

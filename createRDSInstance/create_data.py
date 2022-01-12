@@ -63,7 +63,7 @@ def create_users(N: int)->pd.DataFrame:
                             for code in random.sample(range(10_000, 99_999), N)]
     users['phone'] = ["(+374){}-{}".format(str(number)[:2], str(number)[2:])
                       for number in random.sample(range(10_000_000, 99_999_999), N)]
-    users['registration'] = pd.date_range(start='2021-01-01', end='2021-12-31', periods=N)
+    users['registration'] = pd.date_range(start='2022-01-07', end='2022-01-08', periods=N)
 
     users['date_of_birth'] = [(pd.to_datetime('1975-01-01') + pd.to_timedelta(random.randint(1,10000), unit='d')).date()
                               for _ in range(N)]
@@ -174,7 +174,13 @@ def create_financial_instrument(banks_id: list)->pd.DataFrame:
         'type'
     ])
     fin_instrument.bank_id = [random.choice(banks_id) for _ in range(50)]
-    fin_instrument.asset_category = [random.choice(['Stocks', 'Equity and Index Options','Futures', 'Options On Futures', 'Bonds'])
+    fin_instrument.asset_category = [random.choice([
+        'Stocks',
+        # 'Equity and Index Options',
+        # 'Futures',
+        # 'Options On Futures',
+        'Bonds'
+        ])
                                            for _ in range(50)]
     fin_instrument.symbol = ['GILD', 'IGY', 'RL', 'TAHO', 'CLU7',
                                    'CLX7', 'FDAX JUN 17', 'FDAX JUN 18', '4ADN7 P0765', 'LO4Q7 P4700',
@@ -330,11 +336,11 @@ def create_trades(fin_instrument: pd.DataFrame,
     trades.currency = [random.choice(['USD', 'AUD', 'GBP', 'EUR', 'NZD', 'CAD', 'CHF'])
                        for _ in range(N)]
     trades.pay_date = trades.user_id.apply(
-        lambda id: users[users.id == id].registration.item() + pd.to_timedelta(random.randint(1, 5000), unit='h')
+        lambda id: users[users.id == id].registration.item() + pd.to_timedelta(random.randint(1, 80), unit='h')
         )
-    trades.quantity = random.sample(range(1000, 500_000, 1000), N)
-    trades.t_price = random.sample(np.arange(1.5, 200, 0.5).tolist(), N)
-    trades.comm_fee = random.sample(np.arange(-100, 0, 0.2).tolist(), N)
+    trades.quantity = random.sample(range(-500_000, 500_000, 1000), N)
+    trades.t_price = random.sample(np.arange(1.5, 200, 0.1).tolist(), N)
+    trades.comm_fee = random.sample(np.arange(-100, 0, 0.1).tolist(), N)
     trades.code = [random.choice(code_list) for _ in range(N)]
 
     return trades
