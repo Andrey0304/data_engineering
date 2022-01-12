@@ -16,7 +16,17 @@ os.environ['AWS_SHARED_CREDENTIALS_FILE'] = os.path.join('config','aws_credentia
 config_path = os.path.join('config', 'config.yaml')
 config = yaml.safe_load(open(config_path))
 
-ObjectName = f'{datetime.now().date()}_23:00:00'
+dynamodb = boto3.resource('dynamodb')
+metadata_table = dynamodb.Table('redshift_update_time')
+
+metadata = {
+        d['table']: d['update_time']
+        for d in metadata_table.scan()['Items']
+    }
+
+datetime_now = datetime.now()
+
+ObjectName = str(datetime_now).replace(' ', '_')
 BucketName = 'data-lake-for-me'
 
 conn = psycopg2.connect(**config['redshift'])
@@ -45,6 +55,16 @@ with conn.cursor() as cursor:
 			"""
 			)
     	print(f'{table} successfuly upload to Data WareHouse')
+
+    	metadata_table.update_item(
+            Key={
+                'table': table,
+            },
+            UpdateExpression='set update_time=:v',
+            ExpressionAttributeValues={
+                ':v': str(datetime_now),
+            },
+        )
 
 
    # def put_object_to_Readshift(
