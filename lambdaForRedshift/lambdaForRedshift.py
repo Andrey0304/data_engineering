@@ -1,11 +1,8 @@
 import boto3
 import os
-import io
 from os.path import basename, abspath, dirname
 import psycopg2
-import pandas as pd
 import yaml
-import pytz
 from datetime import datetime, timedelta
 
 
@@ -65,24 +62,3 @@ with conn.cursor() as cursor:
                 ':v': str(datetime_now),
             },
         )
-
-
-   # def put_object_to_Readshift(
-# 	conn,
-# 	client,
-# 	tables: tuple,
-# 	column_for_check: str
-# ):
-	
-# 		sql = f"""
-# 				SELECT * FROM {table}
-# 			   """
-# 		data = pd.io.sql.read_sql_query(sql,  conn)
-# 		buffer = StringIO()
-# 	    data.to_csv(buffer, header=False, index=False)
-
-# 	    buffer.seek(0)
-# 	    cursor.copy_from(buffer, table_name, sep=",", columns=data.columns)
-	    
-# 	    buffer.close()
-
